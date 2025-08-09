@@ -1,14 +1,14 @@
 import { Link } from "react-router";
-import { cn } from "@/lib/utils";
-import { SidebarHeader, useSidebar } from "@/components/ui/sidebar";
+import { SidebarHeader } from "@/components/ui/sidebar";
 import {
     Home,
     LayoutDashboard,
     Info,
     ChevronsLeftRight,
     LogOut,
-    CircleUser,
     ListTodo,
+    CalendarClock,
+    CalendarDays,
 } from "lucide-react";
 import {
     Sidebar,
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useLocation } from "react-router";
 
 const items = [
     {
@@ -48,20 +49,38 @@ const items = [
     },
 ];
 
+const todoItems = [
+    {
+        title: "Today",
+        url: "/dashboard",
+        icon: CalendarClock,
+    },
+    {
+        title: "Upcoming",
+        url: "/dashboard",
+        icon: CalendarDays,
+    },
+];
+
 export function AppSidebar() {
-    const { state } = useSidebar();
+    const location = useLocation();
+    const pathname = location.pathname;
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            asChild
+                        >
                             <Link
                                 to="/"
-                                className="flex items-center gap-1 font-bold"
+                                className="flex items-center gap-1 font-bold h-8 w-8 rounded-lg"
                             >
-                                <ListTodo className="!size-6" />
-                                <span>TASK MASTER</span>
+                                <ListTodo className="!size-8" />
+                                <span className="text-2xl">TASK MASTER</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -74,7 +93,31 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
+                                    <SidebarMenuButton
+                                        isActive={pathname === item.url}
+                                        tooltip={item.title}
+                                        asChild
+                                    >
+                                        <Link to={item.url}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                    <SidebarGroupLabel>Tasks</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {todoItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton
+                                        tooltip={item.title}
+                                        asChild
+                                    >
                                         <Link to={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
@@ -92,31 +135,30 @@ export function AppSidebar() {
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 asChild
-                                className="transition-all data-[state=open]:bg-accent cursor-pointer h-fit"
+                                className="cursor-pointer"
                             >
                                 <SidebarMenuButton
-                                    className={cn(
-                                        state === "collapsed" &&
-                                            "justify-center"
-                                    )}
+                                    size="lg"
+                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
-                                    <Avatar>
-                                        <AvatarImage src="https://github.com/shadcn.png" />
-                                        <AvatarFallback>
-                                            <CircleUser />
+                                    <Avatar className="h-8 w-8 rounded-lg">
+                                        <AvatarImage
+                                            src="https://github.com/shadcn.png"
+                                            alt="username"
+                                        />
+                                        <AvatarFallback className="rounded-lg">
+                                            CN
                                         </AvatarFallback>
                                     </Avatar>
-                                    {state !== "collapsed" && (
-                                        <>
-                                            <div className="flex flex-col overflow-hidden">
-                                                <span>User</span>
-                                                <span className="text-[12px]">
-                                                    useremail@gmail.com
-                                                </span>
-                                            </div>
-                                            <ChevronsLeftRight className="ml-auto" />
-                                        </>
-                                    )}
+                                    <div className="grid flex-1 text-left text-sm leading-tight">
+                                        <span className="truncate font-medium">
+                                            Username
+                                        </span>
+                                        <span className="truncate text-xs">
+                                            user@email.com
+                                        </span>
+                                    </div>
+                                    <ChevronsLeftRight className="ml-auto size-4" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right">
