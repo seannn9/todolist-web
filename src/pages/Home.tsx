@@ -24,11 +24,11 @@ export default function Home() {
                         />
                     </h2>
                 </div>
-                <div className="flex justify-center gap-5 md:gap-10">
+                <div className="flex flex-col px-4 justify-center gap-5 md:px-0 md:gap-10 md:flex-row">
                     <Button
                         onClick={() => navigate("/dashboard")}
                         variant="default"
-                        size="lg"
+                        size="default"
                         className="text-xl cursor-pointer py-6"
                     >
                         Get Started
@@ -36,7 +36,7 @@ export default function Home() {
                     <Button
                         onClick={() => navigate("/about")}
                         variant="outline"
-                        size="lg"
+                        size="default"
                         className="text-xl cursor-pointer py-6"
                     >
                         Learn More

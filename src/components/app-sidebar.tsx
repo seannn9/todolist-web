@@ -79,7 +79,10 @@ export function AppSidebar() {
                                 to="/"
                                 className="flex items-center gap-1 font-bold h-8 w-8 rounded-lg"
                             >
-                                <ListTodo className="!size-8" />
+                                <ListTodo
+                                    className="!size-8"
+                                    color="var(--primary)"
+                                />
                                 <span className="text-2xl">TASK MASTER</span>
                             </Link>
                         </SidebarMenuButton>
