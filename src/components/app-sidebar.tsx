@@ -1,10 +1,10 @@
-import { Link } from "react-router";
-import { SidebarHeader } from "@/components/ui/sidebar";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
     Home,
     LayoutDashboard,
     Info,
     ChevronsLeftRight,
+    LogIn,
     LogOut,
     ListTodo,
     CalendarClock,
@@ -17,6 +17,7 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -29,7 +30,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useLocation } from "react-router";
+import supabase from "@/utils/supabase";
+import { useEffect, useState } from "react";
 
 const items = [
     {
@@ -63,8 +65,34 @@ const todoItems = [
 ];
 
 export function AppSidebar() {
+    const navigate = useNavigate();
     const location = useLocation();
     const pathname = location.pathname;
+    const [userEmail, setUserEmail] = useState<String>();
+    const [username, setUsername] = useState<String>();
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    const getUser = async () => {
+        const { data } = await supabase.auth.getUser();
+        if (data.user === null) {
+            console.log("no user found");
+        } else {
+            setUserEmail(data?.user?.email);
+            setUsername(data?.user?.user_metadata?.first_name);
+        }
+    };
+
+    const signOut = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) console.log(error);
+        setUserEmail("");
+        setUsername("");
+        navigate("/");
+    };
+
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -154,20 +182,40 @@ export function AppSidebar() {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-medium">
-                                            Username
-                                        </span>
-                                        <span className="truncate text-xs">
-                                            user@email.com
-                                        </span>
+                                        {userEmail ? (
+                                            <>
+                                                <span className="truncate font-medium">
+                                                    {username}
+                                                </span>
+                                                <span className="truncate text-xs">
+                                                    {userEmail}
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <span className="truncate font-medium">
+                                                Guest
+                                            </span>
+                                        )}
                                     </div>
                                     <ChevronsLeftRight className="ml-auto size-4" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right">
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <LogOut /> Sign Out
-                                </DropdownMenuItem>
+                                {username && userEmail ? (
+                                    <DropdownMenuItem
+                                        onClick={signOut}
+                                        className="cursor-pointer"
+                                    >
+                                        <LogOut /> Sign Out
+                                    </DropdownMenuItem>
+                                ) : (
+                                    <DropdownMenuItem
+                                        onClick={() => navigate("/login")}
+                                        className="cursor-pointer"
+                                    >
+                                        <LogIn /> Login
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </SidebarMenuItem>

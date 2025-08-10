@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
 import supabase from "@/utils/supabase";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Pen, Trash, X } from "lucide-react";
 import { DialogTrigger } from "@/components/ui/dialog";
 import DialogComponent from "@/components/dialog";
@@ -45,12 +45,13 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        const cachedTasks = localStorage.getItem("tasks");
-        if (cachedTasks) {
-            setTasks(JSON.parse(cachedTasks));
-        } else {
-            fetchUserTasks();
-        }
+        // const cachedTasks = localStorage.getItem("tasks");
+        // if (cachedTasks) {
+        //     setTasks(JSON.parse(cachedTasks));
+        // } else {
+        //     fetchUserTasks();
+        // }
+        fetchUserTasks();
     }, []);
 
     const fetchUserTasks = async () => {
@@ -64,7 +65,7 @@ export default function Dashboard() {
                 console.log(error);
             } else {
                 setTasks(data);
-                localStorage.setItem("tasks", JSON.stringify(data));
+                // localStorage.setItem("tasks", JSON.stringify(data));
                 setIsLoading(false);
             }
         } catch (error) {
@@ -187,47 +188,50 @@ export default function Dashboard() {
                     <div className=" flex flex-col gap-2 mt-4">
                         {tasks &&
                             tasks.map((task) => (
-                                <li
-                                    className="flex justify-between"
-                                    key={task.id}
-                                >
-                                    <h4>
-                                        Task {task.id}: {task.task}
-                                    </h4>
-                                    <div className="flex gap-4">
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Pen
-                                                    color="gray"
-                                                    className="cursor-pointer"
+                                <React.Fragment key={task.id}>
+                                    <li
+                                        className="flex justify-between"
+                                        key={task.id}
+                                    >
+                                        <h4>
+                                            Task {task.id}: {task.task}
+                                        </h4>
+                                        <div className="flex items-center gap-4">
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Pen
+                                                        color="gray"
+                                                        className="cursor-pointer"
+                                                    />
+                                                </DialogTrigger>
+                                                <DialogComponent
+                                                    inputVal={task.task}
+                                                    onSubmit={(newTask) => {
+                                                        updateTask({
+                                                            id: task.id,
+                                                            task: newTask,
+                                                        });
+                                                    }}
                                                 />
-                                            </DialogTrigger>
-                                            <DialogComponent
-                                                inputVal={task.task}
-                                                onSubmit={(newTask) => {
-                                                    updateTask({
-                                                        id: task.id,
-                                                        task: newTask,
-                                                    });
-                                                }}
-                                            />
-                                        </Dialog>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Trash
-                                                    color="var(--primary)"
-                                                    className="cursor-pointer"
+                                            </Dialog>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Trash
+                                                        color="var(--primary)"
+                                                        className="cursor-pointer"
+                                                    />
+                                                </AlertDialogTrigger>
+                                                <AlertDialogComponent
+                                                    task={task.task}
+                                                    onClick={() =>
+                                                        deleteTask(task.id)
+                                                    }
                                                 />
-                                            </AlertDialogTrigger>
-                                            <AlertDialogComponent
-                                                task={task.task}
-                                                onClick={() =>
-                                                    deleteTask(task.id)
-                                                }
-                                            />
-                                        </AlertDialog>
-                                    </div>
-                                </li>
+                                            </AlertDialog>
+                                        </div>
+                                    </li>
+                                    <Separator />
+                                </React.Fragment>
                             ))}
                     </div>
                 )}
