@@ -10,6 +10,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import type { FormEventHandler } from "react";
 import { useState, useEffect } from "react";
+import { Label } from "./ui/label";
 
 interface DialogProps {
     inputVal: string;
@@ -38,7 +39,7 @@ export default function DialogComponent({ inputVal, onSubmit }: DialogProps) {
             </DialogHeader>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-1">
-                    <h3 className="text-[14px] font-bold">Updated Task:</h3>
+                    <Label htmlFor="task">Updated Task</Label>
                     <Input
                         id="task"
                         name="task"
