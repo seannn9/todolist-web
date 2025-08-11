@@ -24,7 +24,7 @@ interface FormError {
 export default function Dashboard() {
     const [tasks, setTasks] = useState<UserTasks[]>([]);
     const [userTask, setUserTask] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<FormError>({});
 
     useEffect(() => {
@@ -56,18 +56,14 @@ export default function Dashboard() {
 
     const fetchUserTasks = async () => {
         try {
-            setIsLoading(true);
             const { data, error } = await supabase
                 .from("Tasks")
                 .select("*, created_at")
                 .order("id", { ascending: true });
             if (error) {
                 console.log(error);
-            } else {
-                setTasks(data);
-                // localStorage.setItem("tasks", JSON.stringify(data));
-                setIsLoading(false);
-            }
+            } else setTasks(data);
+            // localStorage.setItem("tasks", JSON.stringify(data));
         } catch (error) {
             console.log(error);
         } finally {
@@ -130,7 +126,7 @@ export default function Dashboard() {
     };
 
     return (
-        <section className="w-full flex flex-col flex-1 py-5 px-5 sm:px-10">
+        <section className="w-full bg-background flex flex-col flex-1 py-5 px-5 sm:px-10">
             <h1 className="text-3xl font-bold">Dashboard</h1>
             <div>
                 <form
@@ -176,15 +172,15 @@ export default function Dashboard() {
             <section className="w-full h-fit border-2 p-4 border-border text-[1rem]">
                 {tasks.length !== 0 ? (
                     <h2 className="text-xl font-semibold">Your To-Dos</h2>
+                ) : isLoading ? (
+                    <h2 className="text-xl font-semibold">Loading Tasks...</h2>
                 ) : (
                     <h2 className="text-xl font-semibold">
                         Start By Adding To-Dos
                     </h2>
                 )}
                 <Separator className="mt-2" />
-                {isLoading ? (
-                    <div>Loading Tasks...</div>
-                ) : (
+                {!isLoading && (
                     <div className=" flex flex-col gap-2 mt-4">
                         {tasks &&
                             tasks.map((task) => (
