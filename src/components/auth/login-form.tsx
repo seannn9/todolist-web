@@ -68,6 +68,7 @@ export function LoginForm({
                                 <Input
                                     id="email"
                                     type="email"
+                                    tabIndex={1}
                                     placeholder="m@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -79,6 +80,7 @@ export function LoginForm({
                                     <Label htmlFor="password">Password</Label>
                                     <a
                                         href="#"
+                                        tabIndex={4}
                                         className="ml-auto inline-block text-[12px] underline-offset-4 hover:underline"
                                     >
                                         Forgot your password?
@@ -87,6 +89,7 @@ export function LoginForm({
                                 <Input
                                     id="password"
                                     type="password"
+                                    tabIndex={2}
                                     value={password}
                                     onChange={(e) =>
                                         setPassword(e.target.value)
@@ -103,6 +106,7 @@ export function LoginForm({
                                 <Button
                                     type="submit"
                                     className="w-full"
+                                    tabIndex={3}
                                     disabled={isLoading}
                                 >
                                     {isLoading ? "Processing..." : "Login"}
