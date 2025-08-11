@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog } from "@/components/ui/dialog";
 import supabase from "@/utils/supabase";
 import React, { useState, useEffect } from "react";
-import { Pen, Trash, X } from "lucide-react";
-import { DialogTrigger } from "@/components/ui/dialog";
-import DialogComponent from "@/components/dialog";
+import { Ellipsis, SquarePen, Trash, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import DialogComponent from "@/components/dialog";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AlertDialogComponent from "@/components/alert-dialog";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuItem,
+    DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 
 interface UserTasks {
     id: number;
@@ -26,6 +31,12 @@ export default function Dashboard() {
     const [userTask, setUserTask] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<FormError>({});
+    const [openDialogTaskId, setOpenDialogTaskId] = useState<number | null>(
+        null
+    );
+    const [openDropdownTaskId, setOpenDropdownTaskId] = useState<number | null>(
+        null
+    );
 
     useEffect(() => {
         const channels = supabase
@@ -45,12 +56,6 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        // const cachedTasks = localStorage.getItem("tasks");
-        // if (cachedTasks) {
-        //     setTasks(JSON.parse(cachedTasks));
-        // } else {
-        //     fetchUserTasks();
-        // }
         fetchUserTasks();
     }, []);
 
@@ -63,7 +68,6 @@ export default function Dashboard() {
             if (error) {
                 console.log(error);
             } else setTasks(data);
-            // localStorage.setItem("tasks", JSON.stringify(data));
         } catch (error) {
             console.log(error);
         } finally {
@@ -83,15 +87,19 @@ export default function Dashboard() {
     };
 
     const updateTask = async ({ id, task }: UserTasks) => {
-        const { error } = await supabase
-            .from("Tasks")
-            .update({ task: task })
-            .eq("id", id);
-        if (error) {
-            console.log(error);
+        try {
+            const { error } = await supabase
+                .from("Tasks")
+                .update({ task: task })
+                .eq("id", id);
+            if (error) {
+                console.log(error);
+            }
+            console.log(id, task);
+            fetchUserTasks();
+        } finally {
+            setOpenDialogTaskId(null);
         }
-        console.log(id, task);
-        fetchUserTasks();
     };
 
     const deleteTask = async (removeTaskId: number) => {
@@ -171,7 +179,9 @@ export default function Dashboard() {
 
             <section className="w-full h-fit border-2 p-4 border-border text-[1rem]">
                 {tasks.length !== 0 ? (
-                    <h2 className="text-xl font-semibold">Your To-Dos</h2>
+                    <h2 className="text-xl font-semibold text-primary">
+                        Your To-Dos
+                    </h2>
                 ) : isLoading ? (
                     <h2 className="text-xl font-semibold">Loading Tasks...</h2>
                 ) : (
@@ -179,51 +189,114 @@ export default function Dashboard() {
                         Start By Adding To-Dos
                     </h2>
                 )}
-                <Separator className="mt-2" />
+                <Separator className="mt-2 mb-1" />
                 {!isLoading && (
-                    <div className=" flex flex-col gap-2 mt-4">
+                    <div className=" flex flex-col gap-1">
                         {tasks &&
                             tasks.map((task) => (
                                 <React.Fragment key={task.id}>
                                     <li
-                                        className="flex justify-between"
+                                        className="flex justify-between items-center"
                                         key={task.id}
                                     >
-                                        <h4>
+                                        <h4 className="indent-4">
                                             Task {task.id}: {task.task}
                                         </h4>
                                         <div className="flex items-center gap-4">
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <Pen
-                                                        color="gray"
-                                                        className="cursor-pointer"
+                                            <Dialog
+                                                open={
+                                                    openDialogTaskId === task.id
+                                                }
+                                                onOpenChange={(isOpen) =>
+                                                    setOpenDialogTaskId(
+                                                        isOpen ? task.id : null
+                                                    )
+                                                }
+                                            >
+                                                <AlertDialog>
+                                                    <DropdownMenu
+                                                        open={
+                                                            openDropdownTaskId ===
+                                                            task.id
+                                                        }
+                                                        onOpenChange={(
+                                                            isOpen
+                                                        ) =>
+                                                            setOpenDropdownTaskId(
+                                                                isOpen
+                                                                    ? task.id
+                                                                    : null
+                                                            )
+                                                        }
+                                                    >
+                                                        <DropdownMenuTrigger className="transition-all rounded-md data-[state=open]:bg-muted hover:bg-muted px-3 py-2 mr-2">
+                                                            {/* <Button variant="ghost">
+                                                                <Ellipsis />
+                                                            </Button> */}
+                                                            <Ellipsis />
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent
+                                                            side="top"
+                                                            align="end"
+                                                            className="flex flex-col gap-1"
+                                                        >
+                                                            <DialogTrigger
+                                                                asChild
+                                                            >
+                                                                <DropdownMenuItem
+                                                                    className="cursor-pointer"
+                                                                    onSelect={(
+                                                                        e
+                                                                    ) => {
+                                                                        e.preventDefault();
+                                                                        setOpenDropdownTaskId(
+                                                                            null
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <SquarePen />
+                                                                    <span>
+                                                                        Edit
+                                                                    </span>
+                                                                </DropdownMenuItem>
+                                                            </DialogTrigger>
+                                                            <AlertDialogTrigger className="w-full">
+                                                                <DropdownMenuItem
+                                                                    className="cursor-pointer"
+                                                                    onSelect={(
+                                                                        e
+                                                                    ) => {
+                                                                        e.preventDefault();
+                                                                        setOpenDropdownTaskId(
+                                                                            null
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <Trash />
+                                                                    <span>
+                                                                        Delete
+                                                                    </span>
+                                                                </DropdownMenuItem>
+                                                            </AlertDialogTrigger>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                    <AlertDialogComponent
+                                                        task={task.task}
+                                                        onClick={() =>
+                                                            deleteTask(task.id)
+                                                        }
                                                     />
-                                                </DialogTrigger>
-                                                <DialogComponent
-                                                    inputVal={task.task}
-                                                    onSubmit={(newTask) => {
-                                                        updateTask({
-                                                            id: task.id,
-                                                            task: newTask,
-                                                        });
-                                                    }}
-                                                />
+                                                    <DialogComponent
+                                                        inputVal={task.task}
+                                                        onSubmit={(newTask) => {
+                                                            updateTask({
+                                                                id: task.id,
+                                                                task: newTask,
+                                                            });
+                                                        }}
+                                                    />
+                                                </AlertDialog>
                                             </Dialog>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Trash
-                                                        color="var(--primary)"
-                                                        className="cursor-pointer"
-                                                    />
-                                                </AlertDialogTrigger>
-                                                <AlertDialogComponent
-                                                    task={task.task}
-                                                    onClick={() =>
-                                                        deleteTask(task.id)
-                                                    }
-                                                />
-                                            </AlertDialog>
                                         </div>
                                     </li>
                                     <Separator />
