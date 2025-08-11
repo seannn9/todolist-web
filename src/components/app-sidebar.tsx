@@ -28,10 +28,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import supabase from "@/utils/supabase";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthProvider";
 
 const items = [
     {
@@ -68,28 +67,11 @@ export function AppSidebar() {
     const navigate = useNavigate();
     const location = useLocation();
     const pathname = location.pathname;
-    const [userEmail, setUserEmail] = useState<String>();
-    const [username, setUsername] = useState<String>();
-
-    useEffect(() => {
-        getUser();
-    }, []);
-
-    const getUser = async () => {
-        const { data } = await supabase.auth.getUser();
-        if (data.user === null) {
-            console.log("no user found");
-        } else {
-            setUserEmail(data?.user?.email);
-            setUsername(data?.user?.user_metadata?.first_name);
-        }
-    };
+    const { user, loading } = useAuth();
 
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
-        if (error) console.log(error);
-        setUserEmail("");
-        setUsername("");
+        if (error) console.error(error);
         navigate("/");
     };
 
@@ -174,7 +156,7 @@ export function AppSidebar() {
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage
-                                            src="https://github.com/shadcn.png"
+                                            src="/images/user.png"
                                             alt="username"
                                         />
                                         <AvatarFallback className="rounded-lg">
@@ -182,15 +164,22 @@ export function AppSidebar() {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        {userEmail ? (
+                                        {user ? (
                                             <>
                                                 <span className="truncate font-medium">
-                                                    {username}
+                                                    {
+                                                        user.user_metadata
+                                                            .first_name
+                                                    }
                                                 </span>
                                                 <span className="truncate text-xs">
-                                                    {userEmail}
+                                                    {user.email}
                                                 </span>
                                             </>
+                                        ) : loading ? (
+                                            <span className="truncate font-medium">
+                                                Loading User...
+                                            </span>
                                         ) : (
                                             <span className="truncate font-medium">
                                                 Guest
@@ -201,7 +190,7 @@ export function AppSidebar() {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right">
-                                {username && userEmail ? (
+                                {user ? (
                                     <DropdownMenuItem
                                         onClick={signOut}
                                         className="cursor-pointer"

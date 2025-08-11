@@ -7,27 +7,42 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/auth/Register";
 import Confirm from "./pages/auth/Confirm";
 import NotFound from "./pages/NotFound";
-import supabase from "./utils/supabase";
-import { useEffect } from "react";
+import {
+    LoggedInRoute,
+    ProtectedRoute,
+} from "./components/auth/protected-route";
 
 function App() {
-    useEffect(() => {
-        getUser();
-    }, []);
-
-    const getUser = async () => {
-        const { data } = await supabase.auth.getUser();
-        console.log(data);
-    };
     return (
         <SidebarLayout>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/login"
+                    element={
+                        <LoggedInRoute>
+                            <Login />
+                        </LoggedInRoute>
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        <LoggedInRoute>
+                            <Register />
+                        </LoggedInRoute>
+                    }
+                />
                 <Route path="/auth/confirm" element={<Confirm />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </SidebarLayout>
