@@ -18,15 +18,22 @@ interface DialogProps {
 }
 
 export default function DialogComponent({ inputVal, onSubmit }: DialogProps) {
-    const [newTask, setNewTask] = useState(inputVal || "");
+    const [newTask, setNewTask] = useState(inputVal);
+    const [error, setError] = useState<string>("");
 
     useEffect(() => {
-        setNewTask(inputVal || "");
+        setNewTask(inputVal);
     }, [inputVal]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-        onSubmit(newTask);
+        setError("");
+        if (newTask.trim() === "") {
+            setError("Input something first");
+            return;
+        } else {
+            onSubmit(newTask);
+        }
     };
     return (
         <DialogContent>
@@ -45,15 +52,23 @@ export default function DialogComponent({ inputVal, onSubmit }: DialogProps) {
                         name="task"
                         type="text"
                         value={newTask}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setNewTask(e.target.value)
-                        }
+                        onChange={(e) => setNewTask(e.target.value)}
                         className="!ring-0"
+                        required
                     />
+                    {error && <span className="text-primary">{error}</span>}
                 </div>
                 <DialogFooter className="mt-4 justify-center">
                     <DialogClose asChild>
-                        <Button variant="outline">Cancel</Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setNewTask(inputVal);
+                                setError("");
+                            }}
+                        >
+                            Cancel
+                        </Button>
                     </DialogClose>
                     <Button type="submit">Save Changes</Button>
                 </DialogFooter>
