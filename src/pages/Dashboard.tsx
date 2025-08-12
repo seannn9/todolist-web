@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import supabase from "@/utils/supabase";
 import React, { useState, useEffect } from "react";
-import { Ellipsis, SquarePen, Trash, X } from "lucide-react";
+import { Ellipsis, SquarePen, Trash, X, CircleCheckBig } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -43,7 +43,7 @@ export default function Dashboard() {
             .channel("custom-all-channel")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "Tasks" },
+                { event: "*", schema: "public", table: "tasks" },
                 (payload) => {
                     console.log("Change received!", payload);
                     fetchUserTasks();
@@ -62,14 +62,14 @@ export default function Dashboard() {
     const fetchUserTasks = async () => {
         try {
             const { data, error } = await supabase
-                .from("Tasks")
+                .from("tasks")
                 .select("*, created_at")
                 .order("id", { ascending: true });
             if (error) {
-                console.log(error);
+                console.error(error);
             } else setTasks(data);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         } finally {
             setIsLoading(false);
         }
@@ -77,10 +77,10 @@ export default function Dashboard() {
 
     const addTask = async () => {
         const { error } = await supabase
-            .from("Tasks")
+            .from("tasks")
             .insert({ task: userTask });
         if (error) {
-            console.log(error);
+            console.error(error);
         }
         fetchUserTasks();
         setUserTask("");
@@ -89,26 +89,41 @@ export default function Dashboard() {
     const updateTask = async ({ id, task }: UserTasks) => {
         try {
             const { error } = await supabase
-                .from("Tasks")
+                .from("tasks")
                 .update({ task: task })
                 .eq("id", id);
             if (error) {
-                console.log(error);
+                console.error(error);
             }
-            console.log(id, task);
             fetchUserTasks();
         } finally {
             setOpenDialogTaskId(null);
         }
     };
 
+    const completeTask = async ({ task, id }: UserTasks) => {
+        try {
+            const { error } = await supabase
+                .from("completed_tasks")
+                .insert({ task: task, task_id: id });
+            if (error) {
+                console.error(error);
+            } else {
+                console.log("Removed task from main task table");
+                deleteTask(id);
+            }
+        } finally {
+            fetchUserTasks();
+        }
+    };
+
     const deleteTask = async (removeTaskId: number) => {
         const { error } = await supabase
-            .from("Tasks")
+            .from("tasks")
             .delete()
             .eq("id", removeTaskId);
         if (error) {
-            console.log(error);
+            console.error(error);
         }
         fetchUserTasks();
     };
@@ -151,7 +166,7 @@ export default function Dashboard() {
                                     : "!placeholder-muted-foreground"
                             )}
                             value={userTask.trimStart()}
-                            placeholder={error?.task || "Type something..."}
+                            placeholder={error?.task || "Add a task..."}
                             onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                             ) => setUserTask(e.target.value)}
@@ -177,7 +192,7 @@ export default function Dashboard() {
                 </form>
             </div>
 
-            <section className="w-full h-fit border-2 p-4 border-border text-[1rem]">
+            <section className="w-full h-fit border-2 p-4 border-border rounded-lg text-[1rem]">
                 {tasks.length !== 0 ? (
                     <h2 className="text-xl font-semibold text-primary">
                         Your To-Dos
@@ -199,8 +214,11 @@ export default function Dashboard() {
                                         className="flex justify-between items-center"
                                         key={task.id}
                                     >
-                                        <h4 className="indent-4">
-                                            Task {task.id}: {task.task}
+                                        <h4 className="ml-2">
+                                            <span className="text-primary">
+                                                {"-> "}
+                                            </span>
+                                            {task.task}
                                         </h4>
                                         <div className="flex items-center gap-4">
                                             <Dialog
@@ -230,9 +248,6 @@ export default function Dashboard() {
                                                         }
                                                     >
                                                         <DropdownMenuTrigger className="transition-all rounded-md data-[state=open]:bg-muted hover:bg-muted px-3 py-2 mr-2">
-                                                            {/* <Button variant="ghost">
-                                                                <Ellipsis />
-                                                            </Button> */}
                                                             <Ellipsis />
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent
@@ -240,6 +255,22 @@ export default function Dashboard() {
                                                             align="end"
                                                             className="flex flex-col gap-1"
                                                         >
+                                                            <DropdownMenuItem
+                                                                className="cursor-pointer"
+                                                                onSelect={() =>
+                                                                    completeTask(
+                                                                        {
+                                                                            task: task.task,
+                                                                            id: task.id,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                <CircleCheckBig />
+                                                                <span>
+                                                                    Complete
+                                                                </span>
+                                                            </DropdownMenuItem>
                                                             <DialogTrigger
                                                                 asChild
                                                             >
