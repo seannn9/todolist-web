@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /dashboard
+Allow: /login
+Allow: /register
+Allow: /about
+
+Sitemap: https://taskmaster-webapp.vercel.app/sitemap.xml
