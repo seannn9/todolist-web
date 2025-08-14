@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import supabase from "@/utils/supabase";
 import React, { useState, useEffect } from "react";
-import { Ellipsis, SquarePen, Trash, X, CircleCheckBig } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Ellipsis, SquarePen, Trash, CircleCheckBig, Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import DialogComponent from "@/components/dialog";
@@ -19,18 +17,13 @@ import {
 interface UserTasks {
     id: number;
     task: string;
-    deadline?: Date;
-}
-
-interface FormError {
-    task?: string;
+    deadline?: Date | undefined;
 }
 
 export default function Dashboard() {
     const [tasks, setTasks] = useState<UserTasks[]>([]);
-    const [userTask, setUserTask] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<FormError>({});
+    const [openAddTaskDialog, setOpenAddTaskDialiog] = useState(false);
     const [openDialogTaskId, setOpenDialogTaskId] = useState<number | null>(
         null
     );
@@ -75,22 +68,22 @@ export default function Dashboard() {
         }
     };
 
-    const addTask = async () => {
+    const addTask = async (task: string, deadline: Date | undefined) => {
         const { error } = await supabase
             .from("tasks")
-            .insert({ task: userTask });
+            .insert({ task: task, deadline: deadline });
         if (error) {
             console.error(error);
         }
         fetchUserTasks();
-        setUserTask("");
+        setOpenAddTaskDialiog(false);
     };
 
-    const updateTask = async ({ id, task }: UserTasks) => {
+    const updateTask = async ({ id, task, deadline }: UserTasks) => {
         try {
             const { error } = await supabase
                 .from("tasks")
-                .update({ task: task })
+                .update({ task: task, deadline: deadline })
                 .eq("id", id);
             if (error) {
                 console.error(error);
@@ -101,11 +94,11 @@ export default function Dashboard() {
         }
     };
 
-    const completeTask = async ({ task, id }: UserTasks) => {
+    const completeTask = async ({ task, id, deadline }: UserTasks) => {
         try {
             const { error } = await supabase
                 .from("completed_tasks")
-                .insert({ task: task, task_id: id });
+                .insert({ task: task, task_id: id, deadline: deadline });
             if (error) {
                 console.error(error);
             } else {
@@ -128,68 +121,28 @@ export default function Dashboard() {
         fetchUserTasks();
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        setError({ task: "" });
-        e.preventDefault();
-        const errors = validate(userTask);
-        setError(errors);
-        if (Object.keys(errors).length === 0) {
-            addTask();
-        } else {
-            console.log(errors.task);
-        }
-    };
-
-    const validate = (userTask: string): FormError => {
-        const errors: FormError = {};
-        if (!userTask) {
-            errors.task = "Enter a task first...";
-        }
-        return errors;
-    };
-
     return (
         <section className="w-full bg-background flex flex-col flex-1 py-5 px-5 sm:px-10">
             <h1 className="text-3xl font-bold">Dashboard</h1>
-            <div>
-                <form
-                    className="flex items-center my-5 gap-4"
-                    onSubmit={handleSubmit}
+            <div className="my-5">
+                <Dialog
+                    open={openAddTaskDialog}
+                    onOpenChange={setOpenAddTaskDialiog}
                 >
-                    <div className="relative">
-                        <Input
-                            type="text"
-                            className={cn(
-                                "md:w-[350px] font-bold pr-8",
-                                error?.task
-                                    ? "!placeholder-red-400"
-                                    : "!placeholder-muted-foreground"
-                            )}
-                            value={userTask.trimStart()}
-                            placeholder={error?.task || "Add a task..."}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>
-                            ) => setUserTask(e.target.value)}
-                        />
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 hover:bg-muted/50"
-                            onClick={() => setUserTask("")}
-                        >
-                            <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                            <span className="sr-only">Clear input</span>
+                    <DialogTrigger asChild>
+                        <Button type="button">
+                            <Plus />
+                            <span>Add Task</span>
                         </Button>
-                    </div>
-                    <Button
-                        disabled={isLoading ? true : false}
-                        className="cursor-pointer"
-                        type="submit"
-                    >
-                        Add Task
-                    </Button>
-                </form>
+                    </DialogTrigger>
+                    <DialogComponent
+                        action="add"
+                        inputVal=""
+                        onSubmit={(TaskType) => {
+                            addTask(TaskType.task, TaskType.date);
+                        }}
+                    />
+                </Dialog>
             </div>
 
             <section className="w-full h-fit border-2 p-4 border-border rounded-lg text-[1rem]">
@@ -262,6 +215,8 @@ export default function Dashboard() {
                                                                         {
                                                                             task: task.task,
                                                                             id: task.id,
+                                                                            deadline:
+                                                                                task.deadline,
                                                                         }
                                                                     )
                                                                 }
@@ -318,11 +273,23 @@ export default function Dashboard() {
                                                         }
                                                     />
                                                     <DialogComponent
+                                                        action="update"
                                                         inputVal={task.task}
-                                                        onSubmit={(newTask) => {
+                                                        deadline={
+                                                            task.deadline
+                                                                ? new Date(
+                                                                      task.deadline
+                                                                  )
+                                                                : undefined
+                                                        }
+                                                        onSubmit={(
+                                                            TaskType
+                                                        ) => {
                                                             updateTask({
                                                                 id: task.id,
-                                                                task: newTask,
+                                                                task: TaskType.task,
+                                                                deadline:
+                                                                    TaskType.date,
                                                             });
                                                         }}
                                                     />

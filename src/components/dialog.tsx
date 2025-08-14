@@ -11,66 +11,103 @@ import { Button } from "./ui/button";
 import type { FormEventHandler } from "react";
 import { useState, useEffect } from "react";
 import { Label } from "./ui/label";
+import DatePicker from "./date-picker";
 
 interface DialogProps {
+    action: "update" | "add";
     inputVal: string;
-    onSubmit: (newTask: string) => void;
+    deadline?: Date | undefined;
+    onSubmit: ({ task, date, time }: TaskType) => void;
 }
 
-export default function DialogComponent({ inputVal, onSubmit }: DialogProps) {
-    const [newTask, setNewTask] = useState(inputVal);
+interface TaskType {
+    task: string;
+    date: Date | undefined;
+    time?: string;
+}
+
+export default function DialogComponent({
+    action,
+    inputVal,
+    deadline,
+    onSubmit,
+}: DialogProps) {
+    const [task, setTask] = useState(action === "update" ? inputVal : "");
     const [error, setError] = useState<string>("");
+    const [date, setDate] = useState<Date | undefined>(undefined);
+    const [time, setTime] = useState("");
 
     useEffect(() => {
-        setNewTask(inputVal);
+        setTask(inputVal);
     }, [inputVal]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
         setError("");
-        if (newTask.trim() === "") {
+        if (task.trim() === "") {
             setError("Input something first");
             return;
         } else {
-            onSubmit(newTask);
+            onSubmit({
+                task: task,
+                date: date,
+                time: time,
+            });
+        }
+        if (action === "add") {
+            setTask("");
         }
     };
     return (
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Edit Task</DialogTitle>
+                <DialogTitle className="text-primary">
+                    {action === "update" ? "Edit " : "Add "}Task
+                </DialogTitle>
                 <DialogDescription>
-                    Update the details of your task here. Click save when you're
-                    done.
+                    {action === "update"
+                        ? "Update the details of your task here. Click save when you're done."
+                        : "Add your task here. Click add when you're done"}
                 </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-1">
-                    <Label htmlFor="task">Updated Task</Label>
-                    <Input
-                        id="task"
-                        name="task"
-                        type="text"
-                        value={newTask}
-                        onChange={(e) => setNewTask(e.target.value)}
-                        className="!ring-0"
-                        required
+                <div className="flex flex-col gap-4">
+                    <div className=" flex flex-col gap-2">
+                        <Label htmlFor="task">Task</Label>
+                        <Input
+                            id="task"
+                            name="task"
+                            type="text"
+                            value={task}
+                            onChange={(e) => setTask(e.target.value)}
+                            required
+                        />
+                        {error && <span className="text-primary">{error}</span>}
+                    </div>
+                    <DatePicker
+                        deadline={deadline}
+                        onDataSend={({ date, time }) => {
+                            setDate(date);
+                            setTime(time);
+                        }}
                     />
-                    {error && <span className="text-primary">{error}</span>}
                 </div>
                 <DialogFooter className="mt-4 justify-center">
                     <DialogClose asChild>
                         <Button
                             variant="outline"
                             onClick={() => {
-                                setNewTask(inputVal);
+                                setTask(inputVal);
+
                                 setError("");
                             }}
                         >
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button type="submit">Save Changes</Button>
+                    <Button type="submit">
+                        {action === "update" ? "Save Changes" : "Add"}
+                    </Button>
                 </DialogFooter>
             </form>
         </DialogContent>
