@@ -9,6 +9,7 @@ import {
     ListTodo,
     CalendarClock,
     CalendarDays,
+    CircleCheckBig,
 } from "lucide-react";
 import {
     Sidebar,
@@ -60,6 +61,11 @@ const todoItems = [
         title: "Upcoming",
         url: "/dashboard",
         icon: CalendarDays,
+    },
+    {
+        title: "Completed",
+        url: "/dashboard/completed",
+        icon: CircleCheckBig,
     },
 ];
 

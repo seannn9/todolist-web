@@ -10,7 +10,9 @@ export default function SidebarLayout({
         <SidebarProvider>
             <AppSidebar />
             <main className="w-full flex flex-col">
-                <SidebarTrigger />
+                <nav className="p-2 max-h-fit flex items-center gap-4">
+                    <SidebarTrigger />
+                </nav>
                 {children}
             </main>
         </SidebarProvider>
