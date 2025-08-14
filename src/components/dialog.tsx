@@ -18,6 +18,7 @@ interface DialogProps {
     inputVal: string;
     deadline?: Date | undefined;
     onSubmit: ({ task, date, time }: TaskType) => void;
+    loading: boolean;
 }
 
 interface TaskType {
@@ -31,6 +32,7 @@ export default function DialogComponent({
     inputVal,
     deadline,
     onSubmit,
+    loading,
 }: DialogProps) {
     const [task, setTask] = useState(action === "update" ? inputVal : "");
     const [error, setError] = useState<string>("");
@@ -105,8 +107,12 @@ export default function DialogComponent({
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button type="submit">
-                        {action === "update" ? "Save Changes" : "Add"}
+                    <Button type="submit" disabled={loading}>
+                        {!loading && action === "update"
+                            ? "Save Changes"
+                            : !loading && action === "add"
+                            ? "Add"
+                            : "Loading..."}
                     </Button>
                 </DialogFooter>
             </form>

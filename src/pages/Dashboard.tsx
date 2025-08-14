@@ -30,6 +30,7 @@ export default function Dashboard() {
     const [openDropdownTaskId, setOpenDropdownTaskId] = useState<number | null>(
         null
     );
+    const [taskActionLoading, setTaskActionLoading] = useState(false);
 
     useEffect(() => {
         const channels = supabase
@@ -69,17 +70,23 @@ export default function Dashboard() {
     };
 
     const addTask = async (task: string, deadline: Date | undefined) => {
-        const { error } = await supabase
-            .from("tasks")
-            .insert({ task: task, deadline: deadline });
-        if (error) {
-            console.error(error);
+        setTaskActionLoading(true);
+        try {
+            const { error } = await supabase
+                .from("tasks")
+                .insert({ task: task, deadline: deadline });
+            if (error) {
+                console.error(error);
+            }
+            fetchUserTasks();
+        } finally {
+            setOpenAddTaskDialiog(false);
+            setTaskActionLoading(false);
         }
-        fetchUserTasks();
-        setOpenAddTaskDialiog(false);
     };
 
     const updateTask = async ({ id, task, deadline }: UserTasks) => {
+        setTaskActionLoading(true);
         try {
             const { error } = await supabase
                 .from("tasks")
@@ -91,6 +98,7 @@ export default function Dashboard() {
             fetchUserTasks();
         } finally {
             setOpenDialogTaskId(null);
+            setTaskActionLoading(false);
         }
     };
 
@@ -141,6 +149,7 @@ export default function Dashboard() {
                         onSubmit={(TaskType) => {
                             addTask(TaskType.task, TaskType.date);
                         }}
+                        loading={taskActionLoading}
                     />
                 </Dialog>
             </div>
@@ -292,6 +301,9 @@ export default function Dashboard() {
                                                                     TaskType.date,
                                                             });
                                                         }}
+                                                        loading={
+                                                            taskActionLoading
+                                                        }
                                                     />
                                                 </AlertDialog>
                                             </Dialog>
