@@ -61,7 +61,9 @@ export default function Dashboard() {
                 .order("id", { ascending: true });
             if (error) {
                 console.error(error);
-            } else setTasks(data);
+            } else {
+                setTasks(data);
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -131,7 +133,15 @@ export default function Dashboard() {
 
     return (
         <section className="w-full bg-background flex flex-col flex-1 py-5 px-5 sm:px-10">
-            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <div className="text-xl sm:text-3xl font-bold text-primary tracking-wide">
+                {tasks.length !== 0 ? (
+                    <h1>Your Tasks</h1>
+                ) : isLoading ? (
+                    <h1>Loading Tasks...</h1>
+                ) : (
+                    <h1>Start By Adding To-Dos</h1>
+                )}
+            </div>
             <div className="my-5">
                 <Dialog
                     open={openAddTaskDialog}
@@ -153,27 +163,15 @@ export default function Dashboard() {
                     />
                 </Dialog>
             </div>
-
-            <section className="w-full h-fit border-2 p-4 border-border rounded-lg text-[1rem]">
-                {tasks.length !== 0 ? (
-                    <h2 className="text-xl font-semibold text-primary">
-                        Your To-Dos
-                    </h2>
-                ) : isLoading ? (
-                    <h2 className="text-xl font-semibold">Loading Tasks...</h2>
-                ) : (
-                    <h2 className="text-xl font-semibold">
-                        Start By Adding To-Dos
-                    </h2>
-                )}
-                <Separator className="mt-2 mb-1" />
-                {!isLoading && (
-                    <div className=" flex flex-col gap-1">
+            {!isLoading && (
+                <section className="w-full h-fit border-2 p-4 border-border rounded-sm text-[1rem]">
+                    <Separator className="mb-2" />
+                    <div className=" flex flex-col gap-2">
                         {tasks &&
                             tasks.map((task) => (
                                 <React.Fragment key={task.id}>
                                     <li
-                                        className="flex justify-between items-center"
+                                        className="flex items-center"
                                         key={task.id}
                                     >
                                         <h4 className="ml-2">
@@ -182,7 +180,8 @@ export default function Dashboard() {
                                             </span>
                                             {task.task}
                                         </h4>
-                                        <div className="flex items-center gap-4">
+
+                                        <div className="flex ml-auto items-center gap-4">
                                             <Dialog
                                                 open={
                                                     openDialogTaskId === task.id
@@ -313,8 +312,8 @@ export default function Dashboard() {
                                 </React.Fragment>
                             ))}
                     </div>
-                )}
-            </section>
+                </section>
+            )}
         </section>
     );
 }
