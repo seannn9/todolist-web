@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import supabase from "@/utils/supabase";
@@ -10,6 +10,7 @@ function useQuery() {
 export default function Confirm() {
     const navigate = useNavigate();
     const query = useQuery();
+    const [error, setError] = useState("");
 
     const confirm_email = async () => {
         const token_hash = query.get("token_hash");
@@ -36,7 +37,8 @@ export default function Confirm() {
                 console.error("Verification error:", error.message);
             }
         } else {
-            console.error("Missing or invalid token/type");
+            setError("Missing or invalid token/type");
+            navigate("/login");
         }
     };
 
@@ -44,5 +46,13 @@ export default function Confirm() {
         confirm_email();
     }, []);
 
-    return <div>Verifying your email...</div>;
+    return (
+        <div className="h-full flex justify-center mt-20 text-lg sm:text-2xl text-primary">
+            {error ? (
+                <span>Missing or invalid token/type</span>
+            ) : (
+                <span>Verifying your email...</span>
+            )}
+        </div>
+    );
 }
