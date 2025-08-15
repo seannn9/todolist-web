@@ -159,6 +159,7 @@ export function AppSidebar() {
                                 <SidebarMenuButton
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                    tooltip={user?.user_metadata.first_name}
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage
