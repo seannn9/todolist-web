@@ -133,7 +133,7 @@ export default function Dashboard() {
 
     return (
         <section className="w-full bg-background flex flex-col flex-1 py-5 px-5 sm:px-10">
-            <div className="text-xl sm:text-3xl font-bold text-primary tracking-wide">
+            <header className="text-xl sm:text-3xl font-bold text-primary tracking-wide">
                 {tasks.length !== 0 ? (
                     <h1>Your Tasks</h1>
                 ) : isLoading ? (
@@ -141,7 +141,7 @@ export default function Dashboard() {
                 ) : (
                     <h1>Start By Adding To-Dos</h1>
                 )}
-            </div>
+            </header>
             <div className="my-5">
                 <Dialog
                     open={openAddTaskDialog}
@@ -163,7 +163,7 @@ export default function Dashboard() {
                     />
                 </Dialog>
             </div>
-            {!isLoading && (
+            {!isLoading && tasks.length !== 0 && (
                 <section className="w-full h-fit border-2 p-4 border-border rounded-sm text-[1rem]">
                     <Separator className="mb-2" />
                     <div className=" flex flex-col gap-2">

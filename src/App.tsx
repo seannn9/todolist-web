@@ -11,6 +11,7 @@ import {
     LoggedInRoute,
     ProtectedRoute,
 } from "./components/auth/protected-route";
+import Completed from "./pages/Completed";
 
 function App() {
     return (
@@ -40,6 +41,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/dashboard/completed"
+                    element={
+                        <ProtectedRoute>
+                            <Completed />
                         </ProtectedRoute>
                     }
                 />
