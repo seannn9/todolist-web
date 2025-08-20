@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
-import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -26,6 +25,7 @@ export default function DatePicker({ deadline, onDataSend }: DatePickerProp) {
     useEffect(() => {
         if (deadline) {
             setDate(new Date(deadline));
+            setTime("00:00:00"); // splaceholder time to avoid deployment error for unused vars
             onDataSend({ date: new Date(deadline), time: time });
         }
     }, [deadline]);
