@@ -40,14 +40,14 @@ const items = [
         icon: Home,
     },
     {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: LayoutDashboard,
-    },
-    {
         title: "Info",
         url: "/about",
         icon: Info,
+    },
+    {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
     },
 ];
 
@@ -134,6 +134,7 @@ export function AppSidebar() {
                             {todoItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton
+                                        isActive={pathname === item.url}
                                         tooltip={item.title}
                                         asChild
                                     >
