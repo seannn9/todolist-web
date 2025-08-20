@@ -52,11 +52,21 @@ export default function Completed() {
                                 completedTasks.map((task) => (
                                     <React.Fragment key={task.id}>
                                         <li className="flex items-center">
-                                            <h4 className="m-2">
+                                            <h4 className="flex flex-wrap m-2 w-full">
                                                 <span className="text-primary">
-                                                    {"-> "}
+                                                    {"-> "}{" "}
+                                                    <span className="text-foreground">
+                                                        {task.task}
+                                                    </span>
                                                 </span>
-                                                {task.task}
+
+                                                <span className="ml-auto text-muted-foreground">
+                                                    Date Completed:{" "}
+                                                    {task.date_completed &&
+                                                        new Date(
+                                                            task.date_completed
+                                                        ).toDateString()}
+                                                </span>
                                             </h4>
                                         </li>
                                         <Separator />
