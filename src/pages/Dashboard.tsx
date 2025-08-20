@@ -174,13 +174,22 @@ export default function Dashboard() {
                                         className="flex items-center"
                                         key={task.id}
                                     >
-                                        <h4 className="ml-2">
+                                        <h4 className="flex flex-wrap m-2 w-full">
                                             <span className="text-primary">
-                                                {"-> "}
+                                                {"-> "}{" "}
+                                                <span className="text-foreground">
+                                                    {task.task}
+                                                </span>
                                             </span>
-                                            {task.task}
-                                        </h4>
 
+                                            <span className="ml-auto text-muted-foreground">
+                                                Deadline:{" "}
+                                                {task.deadline &&
+                                                    new Date(
+                                                        task.deadline
+                                                    ).toDateString()}
+                                            </span>
+                                        </h4>
                                         <div className="flex ml-auto items-center gap-4">
                                             <Dialog
                                                 open={
