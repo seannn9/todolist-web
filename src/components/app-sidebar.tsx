@@ -54,12 +54,12 @@ const items = [
 const todoItems = [
     {
         title: "Today",
-        url: "/dashboard",
+        url: "/dashboard/today",
         icon: CalendarClock,
     },
     {
         title: "Upcoming",
-        url: "/dashboard",
+        url: "/dashboard/upcoming",
         icon: CalendarDays,
     },
     {

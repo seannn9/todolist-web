@@ -12,6 +12,7 @@ import {
     ProtectedRoute,
 } from "./components/auth/protected-route";
 import Completed from "./pages/Completed";
+import Today from "./pages/Today";
 
 function App() {
     return (
@@ -49,6 +50,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Completed />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/dashboard/today"
+                    element={
+                        <ProtectedRoute>
+                            <Today />
                         </ProtectedRoute>
                     }
                 />
