@@ -13,6 +13,7 @@ import {
 } from "./components/auth/protected-route";
 import Completed from "./pages/Completed";
 import Today from "./pages/Today";
+import Upcoming from "./pages/Upcoming";
 
 function App() {
     return (
@@ -58,6 +59,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Today />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/dashboard/upcoming"
+                    element={
+                        <ProtectedRoute>
+                            <Upcoming />
                         </ProtectedRoute>
                     }
                 />
