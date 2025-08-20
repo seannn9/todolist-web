@@ -41,61 +41,38 @@ export default function DatePicker({ deadline, onDataSend }: DatePickerProp) {
     return (
         <div className="flex flex-col gap-3">
             <Label>Deadline</Label>
-            <div className="flex flex-col min-[380px]:flex-row items-center gap-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <Label
-                        htmlFor="date-picker"
-                        className="px-1 text-muted-foreground"
-                    >
-                        Date
-                    </Label>
-                    <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                id="date-picker"
-                                className="w-fit justify-between font-normal"
-                            >
-                                {date ? date.toDateString() : "Select date"}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                            className="w-auto overflow-hidden p-0"
-                            align="start"
+            <div className="flex flex-col min-[380px]:flex-row items-center">
+                <Label htmlFor="date-picker" className="text-muted-foreground">
+                    <span className="sr-only">Date</span>
+                </Label>
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            id="date-picker"
+                            className="w-fit justify-between font-normal"
                         >
-                            <Calendar
-                                mode="single"
-                                selected={date}
-                                hidden={{ before: d }}
-                                startMonth={new Date(year, month)}
-                                endMonth={new Date(year + 5, 11)}
-                                captionLayout="dropdown"
-                                onSelect={(date) => {
-                                    setDate(date);
-                                    setOpen(false);
-                                }}
-                            />
-                        </PopoverContent>
-                    </Popover>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <Label
-                        htmlFor="time-picker"
-                        className="px-1 text-muted-foreground"
+                            {date ? date.toDateString() : "Select date"}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
                     >
-                        Time
-                    </Label>
-                    <Input
-                        type="time"
-                        id="time-picker"
-                        step="1"
-                        value={time}
-                        onChange={(e) => {
-                            setTime(e.target.value);
-                        }}
-                        className="w-fit bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                    />
-                </div>
+                        <Calendar
+                            mode="single"
+                            selected={date}
+                            hidden={{ before: d }}
+                            startMonth={new Date(year, month)}
+                            endMonth={new Date(year + 5, 11)}
+                            captionLayout="dropdown"
+                            onSelect={(date) => {
+                                setDate(date);
+                                setOpen(false);
+                            }}
+                        />
+                    </PopoverContent>
+                </Popover>
             </div>
         </div>
     );
