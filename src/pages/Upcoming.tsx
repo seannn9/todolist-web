@@ -12,6 +12,12 @@ interface UpcomingTasks {
 export default function Upcoming() {
     const [upcomingTasks, setUpcomingTasks] = useState<UpcomingTasks[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const today = new Date();
+    const tomorrow = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 1
+    ).toDateString();
 
     useEffect(() => {
         fetchTasksToday();
@@ -65,10 +71,28 @@ export default function Upcoming() {
                                 upcomingTasks.map((task) => (
                                     <React.Fragment key={task.id}>
                                         <li className="flex items-center">
-                                            <h4 className="flex flex-wrap m-2 w-full">
-                                                <span className="text-primary">
-                                                    {"-> "}{" "}
-                                                    <span className="text-foreground">
+                                            <h4 className="flex flex-wrap m-2 w-full items-center">
+                                                <span className="flex items-center">
+                                                    <span
+                                                        className={`text-3xl ${
+                                                            task.deadline &&
+                                                            new Date(
+                                                                task.deadline
+                                                            ).toDateString() ===
+                                                                today.toDateString()
+                                                                ? "text-task-indicator-today"
+                                                                : task.deadline &&
+                                                                  new Date(
+                                                                      task.deadline
+                                                                  ).toDateString() ===
+                                                                      tomorrow
+                                                                ? "text-task-indicator-tomorrow"
+                                                                : "text-task-indicator-upcoming"
+                                                        }`}
+                                                    >
+                                                        &bull;
+                                                    </span>
+                                                    <span className="text-foreground ml-2">
                                                         {task.task}
                                                     </span>
                                                 </span>

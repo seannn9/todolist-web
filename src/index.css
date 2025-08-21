@@ -75,6 +75,9 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+    --color-task-indicator-today: oklch(0.645 0.246 16.439);
+    --color-task-indicator-tomorrow: oklch(0.769 0.188 70.08);
+    --color-task-indicator-upcoming: oklch(0.696 0.17 162.48);
 }
 
 @media (prefers-color-scheme: dark) {

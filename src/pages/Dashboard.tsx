@@ -31,6 +31,12 @@ export default function Dashboard() {
         null
     );
     const [taskActionLoading, setTaskActionLoading] = useState(false);
+    const today = new Date();
+    const tomorrow = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 1
+    ).toDateString();
 
     useEffect(() => {
         const channels = supabase
@@ -174,21 +180,56 @@ export default function Dashboard() {
                                         className="flex items-center"
                                         key={task.id}
                                     >
-                                        <h4 className="flex flex-wrap m-2 w-full">
-                                            <span className="text-primary">
-                                                {"-> "}{" "}
-                                                <span className="text-foreground">
+                                        <h4 className="flex flex-wrap m-2 w-full items-center">
+                                            <span className="flex items-center">
+                                                <span
+                                                    className={`text-3xl ${
+                                                        task.deadline &&
+                                                        (new Date(
+                                                            task.deadline
+                                                        ).toDateString() ===
+                                                            today.toDateString() ||
+                                                            new Date(
+                                                                task.deadline
+                                                            ) < today)
+                                                            ? "text-task-indicator-today"
+                                                            : task.deadline &&
+                                                              new Date(
+                                                                  task.deadline
+                                                              ).toDateString() ===
+                                                                  tomorrow
+                                                            ? "text-task-indicator-tomorrow"
+                                                            : "text-task-indicator-upcoming"
+                                                    }`}
+                                                >
+                                                    &bull;
+                                                </span>
+                                                <span className="text-foreground ml-2">
                                                     {task.task}
                                                 </span>
                                             </span>
-
-                                            <span className="ml-auto text-muted-foreground">
-                                                Deadline:{" "}
-                                                {task.deadline &&
-                                                    new Date(
+                                            {task.deadline && (
+                                                <span className="ml-auto text-muted-foreground">
+                                                    {new Date(
+                                                        task.deadline
+                                                    ).setHours(0, 0, 0, 0) <
+                                                    new Date().setHours(
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                    ) ? (
+                                                        <span className="text-primary">
+                                                            Overdue!{" "}
+                                                        </span>
+                                                    ) : (
+                                                        "Deadline: "
+                                                    )}
+                                                    {new Date(
                                                         task.deadline
                                                     ).toDateString()}
-                                            </span>
+                                                </span>
+                                            )}
                                         </h4>
                                         <div className="flex ml-auto items-center gap-4">
                                             <Dialog

@@ -53,9 +53,9 @@ export default function Completed() {
                                     <React.Fragment key={task.id}>
                                         <li className="flex items-center">
                                             <h4 className="flex flex-wrap m-2 w-full">
-                                                <span className="text-primary">
-                                                    {"-> "}{" "}
-                                                    <span className="text-foreground">
+                                                <span className="text-task-indicator-upcoming">
+                                                    &#10003;
+                                                    <span className="text-foreground ml-2">
                                                         {task.task}
                                                     </span>
                                                 </span>

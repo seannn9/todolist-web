@@ -66,10 +66,14 @@ export default function Today() {
                                     <React.Fragment key={task.id}>
                                         <li className="flex items-center">
                                             <h4 className="m-2">
-                                                <span className="text-primary">
-                                                    {"-> "}
+                                                <span className="flex items-center">
+                                                    <span className="text-task-indicator-today text-3xl">
+                                                        &bull;
+                                                    </span>
+                                                    <span className="ml-2">
+                                                        {task.task}
+                                                    </span>
                                                 </span>
-                                                {task.task}
                                             </h4>
                                         </li>
                                         <Separator />
