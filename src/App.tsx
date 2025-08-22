@@ -14,65 +14,68 @@ import {
 import Completed from "./pages/Completed";
 import Today from "./pages/Today";
 import Upcoming from "./pages/Upcoming";
+import { ThemeProvider } from "./context/ThemeProvider";
 
 function App() {
     return (
-        <SidebarLayout>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                    path="/login"
-                    element={
-                        <LoggedInRoute>
-                            <Login />
-                        </LoggedInRoute>
-                    }
-                />
-                <Route
-                    path="/register"
-                    element={
-                        <LoggedInRoute>
-                            <Register />
-                        </LoggedInRoute>
-                    }
-                />
-                <Route path="/auth/confirm" element={<Confirm />} />
-                <Route path="/about" element={<About />} />
-                <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/dashboard/completed"
-                    element={
-                        <ProtectedRoute>
-                            <Completed />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/dashboard/today"
-                    element={
-                        <ProtectedRoute>
-                            <Today />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/dashboard/upcoming"
-                    element={
-                        <ProtectedRoute>
-                            <Upcoming />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </SidebarLayout>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+            <SidebarLayout>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <LoggedInRoute>
+                                <Login />
+                            </LoggedInRoute>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <LoggedInRoute>
+                                <Register />
+                            </LoggedInRoute>
+                        }
+                    />
+                    <Route path="/auth/confirm" element={<Confirm />} />
+                    <Route path="/about" element={<About />} />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/completed"
+                        element={
+                            <ProtectedRoute>
+                                <Completed />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/today"
+                        element={
+                            <ProtectedRoute>
+                                <Today />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/upcoming"
+                        element={
+                            <ProtectedRoute>
+                                <Upcoming />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </SidebarLayout>
+        </ThemeProvider>
     );
 }
 

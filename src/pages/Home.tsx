@@ -20,7 +20,7 @@ export default function Home() {
                     <h1 className="text-4xl md:text-5xl font-black text-center">
                         TASK MASTER
                     </h1>
-                    <h2 className="text-2xl md:text-3xl  text-gray-400 font-extrabold text-center mb-10">
+                    <h2 className="text-2xl md:text-3xl text-gray-500 dark:text-gray-400 font-extrabold text-center mb-10">
                         <TextType
                             text="Conquer Your To-Do List with Ease."
                             typingSpeed={40}
