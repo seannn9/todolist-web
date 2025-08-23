@@ -7,10 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/auth/Register";
 import Confirm from "./pages/auth/Confirm";
 import NotFound from "./pages/NotFound";
-import {
-    LoggedInRoute,
-    ProtectedRoute,
-} from "./components/auth/protected-route";
+import { LoggedInRoute } from "./components/auth/protected-route";
 import Completed from "./pages/Completed";
 import Today from "./pages/Today";
 import Upcoming from "./pages/Upcoming";
@@ -40,38 +37,13 @@ function App() {
                     />
                     <Route path="/auth/confirm" element={<Confirm />} />
                     <Route path="/about" element={<About />} />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route
                         path="/dashboard/completed"
-                        element={
-                            <ProtectedRoute>
-                                <Completed />
-                            </ProtectedRoute>
-                        }
+                        element={<Completed />}
                     />
-                    <Route
-                        path="/dashboard/today"
-                        element={
-                            <ProtectedRoute>
-                                <Today />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/dashboard/upcoming"
-                        element={
-                            <ProtectedRoute>
-                                <Upcoming />
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/dashboard/today" element={<Today />} />
+                    <Route path="/dashboard/upcoming" element={<Upcoming />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </SidebarLayout>
