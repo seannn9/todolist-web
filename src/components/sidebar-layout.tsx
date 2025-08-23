@@ -14,7 +14,7 @@ export default function SidebarLayout({
         <SidebarProvider>
             <AppSidebar />
             <main className="w-full flex flex-col">
-                <nav className="p-2 max-h-fit flex items-center gap-4">
+                <nav className="p-2 max-h-fit flex items-center gap-4 border-b-[1px] border-border">
                     <SidebarTrigger />
                     <ModeToggle />
                     {!user && (
