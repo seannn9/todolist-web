@@ -15,20 +15,20 @@ export default function About() {
             <Separator />
             <div className="w-full flex flex-col justify-center items-center gap-4">
                 <h2 className="text-primary text-xl font-semibold">
-                    USER EXPERIENCE
+                    USER MODES
                 </h2>
                 <div className="w-full flex flex-col items-center gap-10">
                     <AboutCard
-                        title="Guest Mode"
+                        title="Guest"
                         desc="When not logged in, you are in guest mode which
-                    allows you to access all website features, but it
+                    allows you to access all to-do list features, but it
                     saves your tasks in local storage, which means that all your
                     tasks will be deleted if you clear your browser's cookies
                     and site data."
                     />
                     <AboutCard
-                        title="User Mode"
-                        desc="When logged in, you are in user mode which also allows you to access all website features, but instead of local storage, it saves your tasks in a secure supabase table, which only you can access. The advantage of this is that your data will not be deleted if you delete your browser data."
+                        title="Logged In"
+                        desc="When logged in, you have access to all website features, but instead of local storage, it saves your tasks in a secure supabase table, which only you can access. The advantage of this is that your data will not be deleted if you delete your browser data."
                     />
                 </div>
             </div>

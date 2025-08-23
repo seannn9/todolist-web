@@ -31,7 +31,7 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col px-4 justify-center gap-5 md:px-0 md:gap-10 md:flex-row">
                     <Button
-                        onClick={() => navigate("/dashboard")}
+                        onClick={() => navigate("/login")}
                         variant="default"
                         size="default"
                         className="text-xl cursor-pointer py-6"

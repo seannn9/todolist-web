@@ -49,8 +49,8 @@ export default function Completed() {
     };
 
     return (
-        <section className="w-full bg-background flex flex-col flex-1 p-5 sm:px-10">
-            <header className="text-xl sm:text-3xl font-bold text-primary tracking-wide">
+        <section className="w-full bg-background flex flex-col flex-1 py-10 px-5 sm:px-10">
+            <header className="text-2xl sm:text-3xl font-bold text-primary tracking-wide">
                 {completedTasks.length !== 0 || guestTask.length !== 0 ? (
                     <h1>Completed Tasks</h1>
                 ) : isLoading ? (
