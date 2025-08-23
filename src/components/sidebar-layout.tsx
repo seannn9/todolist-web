@@ -18,7 +18,7 @@ export default function SidebarLayout({
                     <SidebarTrigger />
                     <ModeToggle />
                     {!user && (
-                        <span className="ml-auto mr-4 text-muted-foreground italic">
+                        <span className="text-sm ml-auto mr-4 text-muted-foreground italic">
                             You are in Guest Mode,{" "}
                             <Link
                                 to="/about"

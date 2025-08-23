@@ -9,17 +9,17 @@ export default function About() {
                     About Task Master
                 </h1>
                 <h2 className="text-xl text-center text-muted-foreground">
-                    Task Master is a simple and minimalistic todo list.
+                    Task Master is a simple and minimalistic to-do list.
                 </h2>
             </header>
             <Separator />
             <div className="w-full flex flex-col justify-center items-center gap-4">
                 <h2 className="text-primary text-xl font-semibold">
-                    User Experience
+                    USER EXPERIENCE
                 </h2>
                 <div className="w-full flex flex-col items-center gap-10">
                     <AboutCard
-                        title="GUEST MODE"
+                        title="Guest Mode"
                         desc="When not logged in, you are in guest mode which
                     allows you to access all website features, but it
                     saves your tasks in local storage, which means that all your
@@ -27,7 +27,7 @@ export default function About() {
                     and site data."
                     />
                     <AboutCard
-                        title="USER MODE"
+                        title="User Mode"
                         desc="When logged in, you are in user mode which also allows you to access all website features, but instead of local storage, it saves your tasks in a secure supabase table, which only you can access. The advantage of this is that your data will not be deleted if you delete your browser data."
                     />
                 </div>
@@ -35,27 +35,27 @@ export default function About() {
             <Separator />
             <div className="w-full h-full mb-10 flex flex-col justify-center items-center gap-4">
                 <h2 className="text-primary text-xl font-semibold">
-                    Navigation Guide
+                    NAVIGATION GUIDE
                 </h2>
                 <div className="w-full flex flex-col items-center gap-10">
                     <AboutCard
-                        title="DASHBOARD"
+                        title="Dashboard"
                         desc="This is the main page where you can see your tasks. You
                             can add, update, and delete your tasks here."
                     />
                     <AboutCard
-                        title="TODAY"
+                        title="Today"
                         desc="This is where you can see tasks that has deadline set to
                             the current date. Actions for this page is still in
                             development."
                     />
                     <AboutCard
-                        title="UPCOMING"
+                        title="Upcoming"
                         desc="This is where you can see tasks that are upcoming for
                             the week. Actions for this page is still in development."
                     />
                     <AboutCard
-                        title="COMPLETED"
+                        title="Completed"
                         desc="This is where you can see the tasks you have completed
                             and when you completed them. Actions will be added in
                             the future."
