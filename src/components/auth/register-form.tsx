@@ -117,13 +117,6 @@ export function RegisterForm({
                                 >
                                     {isLoading ? "Processing..." : "Register"}
                                 </Button>
-                                <Button
-                                    disabled
-                                    variant="outline"
-                                    className="w-full"
-                                >
-                                    Login with Google
-                                </Button>
                             </div>
                         </div>
                         <div className="mt-4 text-center text-sm">

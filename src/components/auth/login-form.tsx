@@ -112,11 +112,11 @@ export function LoginForm({
                                     {isLoading ? "Processing..." : "Login"}
                                 </Button>
                                 <Button
-                                    disabled
+                                    onClick={() => navigate("/dashboard")}
                                     variant="outline"
                                     className="w-full"
                                 >
-                                    Login with Google
+                                    Login as Guest
                                 </Button>
                             </div>
                         </div>
